@@ -1,26 +1,45 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-pacifico: var(--font-pacifico);
+  --font-rye: var(--font-rye);
+  --font-space: var(--font-space);
+
+  /* Pop Art Colors */
+  --color-pop-yellow: #ffeb3b;
+  --color-pop-blue: #00bcd4;
+  --color-pop-darkblue: #3f51b5;
+  --color-pop-purple: #9c27b0;
+  --color-pop-red: #f44336;
+  --color-pop-orange: #ff9800;
+  --color-pop-green: #4caf50;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .bg-halftone {
+    background-image: radial-gradient(#00000033 15%, transparent 16%), radial-gradient(#00000033 15%, transparent 16%);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+  }
+  .bg-halftone-white {
+    background-image: radial-gradient(#ffffff44 15%, transparent 16%), radial-gradient(#ffffff44 15%, transparent 16%);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+  }
+  .bg-halftone-blue {
+    background-image: radial-gradient(#0c4a6e 20%, transparent 21%), radial-gradient(#0c4a6e 20%, transparent 21%);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+    background-color: #0ea5e9;
+  }
+  .text-shadow-pop {
+    text-shadow: 2px 2px 0px #000, 4px 4px 0px rgba(0,0,0,0.2);
+  }
+  .text-shadow-outline {
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-space), sans-serif;
 }

@@ -1,44 +1,71 @@
-import * as React from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+"use client"
 
-interface PopArtCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  title: string;
-  name: string;
-  colorClass?: string;
+import { cn } from "@/lib/utils"
+import { motion, type HTMLMotionProps } from "framer-motion"
+
+interface InfoCardProps extends Omit<HTMLMotionProps<"article">, "children"> {
+  number: string
+  title: string
+  description?: string
+  className?: string
+  size?: "default" | "large"
 }
 
-export function PopArtCard({
+export function InfoCard({
+  number,
   title,
-  name,
-  colorClass = "bg-pop-blue",
+  description,
   className,
+  size = "default",
   ...props
-}: PopArtCardProps) {
+}: InfoCardProps) {
   return (
-    <Card 
+    <motion.article
+      whileHover={{
+        y: -5,
+        transition: { type: "spring", stiffness: 400, damping: 25 },
+      }}
+      whileTap={{ scale: 0.99 }}
       className={cn(
-        "relative overflow-hidden rounded-2xl border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-transform hover:-translate-y-1 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] duration-300 group",
-        colorClass,
+        "group relative bg-[#003d7a] text-white transition-all duration-300",
+        "shadow-[0_4px_20px_rgba(0,61,122,0.12)] hover:shadow-[0_12px_32px_rgba(0,61,122,0.28)]",
+        size === "large" ? "p-8 md:p-10" : "p-6 md:p-7",
+        "rounded-sm overflow-hidden flex flex-col justify-between",
         className
       )}
       {...props}
     >
-      {/* Halftone Texture Overlay */}
-      <div className="absolute inset-0 bg-halftone-white opacity-40 mix-blend-overlay pointer-events-none transition-opacity group-hover:opacity-60" />
-      
-      {/* Decorative Border / Stamp effect can go here, but for now just the card content */}
-      <CardContent className="p-8 h-full flex flex-col justify-between min-h-[320px] relative z-10">
-        <h3 className="font-rye text-3xl sm:text-4xl text-white text-shadow-outline leading-tight">
+      {/* Subtle top accent line on hover */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-[#d4a843] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-sm font-mono text-white/40 group-hover:text-[#d4a843] transition-colors duration-300">
+            {number}
+          </span>
+          <span className="w-1.5 h-1.5 rounded-full bg-white/20 group-hover:bg-[#d4a843] transition-colors duration-300" />
+        </div>
+
+        <h3
+          className={cn(
+            "font-semibold leading-snug tracking-tight group-hover:text-white transition-colors",
+            size === "large" ? "text-2xl md:text-3xl" : "text-lg md:text-xl"
+          )}
+        >
           {title}
         </h3>
-        
-        <div className="text-right mt-8">
-          <span className="font-space text-2xl font-light tracking-widest text-white/80 lowercase">
-            {name}
-          </span>
-        </div>
-      </CardContent>
-    </Card>
+
+        {description && (
+          <p className="mt-3 text-sm text-white/70 leading-relaxed font-normal">
+            {description}
+          </p>
+        )}
+      </div>
+
+      <div className="mt-6 pt-3 border-t border-white/10 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <span className="text-xs text-white/50 tracking-wider font-mono uppercase">Detail</span>
+        <span className="text-xs text-[#d4a843] transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+      </div>
+    </motion.article>
   )
 }

@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
-import { Pacifico, Rye, Space_Grotesk } from "next/font/google";
+import { Pacifico, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
+
+const fontSpace = Space_Grotesk({
+  variable: "--font-space",
+  subsets: ["latin"],
+});
 
 const fontPacifico = Pacifico({
   weight: "400",
@@ -9,33 +14,20 @@ const fontPacifico = Pacifico({
   subsets: ["latin"],
 });
 
-const fontRye = Rye({
-  weight: "400",
-  variable: "--font-rye",
-  subsets: ["latin"],
-});
-
-const fontSpace = Space_Grotesk({
-  variable: "--font-space",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Synapsis Citizen - Sistem Informasi",
-  description: "Website Prodi Sistem Informasi Universitas Airlangga",
+  title: "Synapsis 26 — Sistem Informasi UNAIR",
+  description: "Program Studi Sistem Informasi, Universitas Airlangga",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="id"
-      className={`${fontPacifico.variable} ${fontRye.variable} ${fontSpace.variable} h-full antialiased`}
+      className={`${fontSpace.variable} ${fontPacifico.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-[#f8f9fa] text-zinc-900 selection:bg-cyan-300">
+      <body className="min-h-full flex flex-col bg-[#fff6dd] text-[#1a1a1a]">
         <Navbar />
-        <div className="flex-1">
-          {children}
-        </div>
+        <div className="flex-1">{children}</div>
       </body>
     </html>
   );

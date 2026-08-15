@@ -1,34 +1,102 @@
+"use client";
+
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 export function Navbar() {
-  return (
-    <nav className="sticky top-0 z-50 w-full border-b-2 border-black/10 bg-white/80 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-8">
-        <div className="flex items-center gap-2">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white font-space font-bold text-lg">
-              SI
-            </div>
-            <span className="font-space font-bold text-xl tracking-tight">Synapsis 26</span>
+  const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [lastY, setLastY] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-          </Link>
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 20);
+      setVisible(y < lastY || y < 80);
+      setLastY(y);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [lastY]);
+
+  // Close menu on scroll
+  useEffect(() => {
+    if (menuOpen) setMenuOpen(false);
+  }, [scrolled]);
+
+  const navLinks = [
+    { label: "Beranda", href: "#" },
+    { label: "Infografis", href: "#" },
+    { label: "Tentang", href: "#" },
+  ];
+
+  const linkColor = scrolled || menuOpen
+    ? "text-[#1a1a1a] hover:text-[#003d7a]"
+    : "text-white/90 hover:text-white";
+
+  return (
+    <nav
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+        visible ? "translate-y-0" : "-translate-y-full"
+      } ${
+        scrolled || menuOpen
+          ? "bg-[#fff6dd]/95 backdrop-blur-sm border-b border-[#003d7a]/10"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="max-w-6xl mx-auto flex h-14 items-center justify-between px-6">
+        <Link href="/" className="flex items-center gap-2.5">
+          <span className={`font-bold text-lg tracking-tight transition-colors ${scrolled || menuOpen ? "text-[#1a1a1a]" : "text-white"}`}>
+            Synapsis 26
+          </span>
+        </Link>
+
+        {/* Desktop links */}
+        <div className="hidden md:flex gap-8 items-center text-sm">
+          {navLinks.map((link) => (
+            <Link key={link.label} href={link.href} className={`transition-colors ${linkColor}`}>
+              {link.label}
+            </Link>
+          ))}
         </div>
-        <div className="hidden md:flex gap-6 items-center">
-          <Link href="#" className="text-sm font-medium hover:text-blue-600 transition-colors">
-            Beranda
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-blue-600 transition-colors">
-            Infografis
-          </Link>
-          <Link href="#" className="text-sm font-medium hover:text-blue-600 transition-colors">
-            Tentang Kami
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <Button variant="outline" className="hidden sm:inline-flex border-2 border-black/20 font-space font-medium hover:bg-gray-100">
-            Hubungi Kami
-          </Button>
+
+        {/* Hamburger button — mobile only */}
+        <button
+          type="button"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden relative w-6 h-5 flex flex-col justify-between"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+        >
+          <span className={`block h-0.5 w-full rounded-full transition-all duration-300 origin-center ${
+            scrolled || menuOpen ? "bg-[#1a1a1a]" : "bg-white"
+          } ${menuOpen ? "rotate-45 translate-y-[9px]" : ""}`} />
+          <span className={`block h-0.5 w-full rounded-full transition-all duration-300 ${
+            scrolled || menuOpen ? "bg-[#1a1a1a]" : "bg-white"
+          } ${menuOpen ? "opacity-0 scale-x-0" : ""}`} />
+          <span className={`block h-0.5 w-full rounded-full transition-all duration-300 origin-center ${
+            scrolled || menuOpen ? "bg-[#1a1a1a]" : "bg-white"
+          } ${menuOpen ? "-rotate-45 -translate-y-[9px]" : ""}`} />
+        </button>
+      </div>
+
+      {/* Mobile menu panel */}
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          menuOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <div className="px-6 pb-6 pt-2 flex flex-col gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className="py-3 text-sm text-[#1a1a1a] hover:text-[#003d7a] transition-colors border-b border-[#003d7a]/5 last:border-0"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
       </div>
     </nav>
